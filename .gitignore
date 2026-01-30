@@ -23,3 +23,9 @@ Thumbs.db
 # Notes internes (pas sur le repo)
 PLAN.md
 SYNTHESE_PROJET.md
+
+# CatBoost training logs
+catboost_info/
+
+# Archives (anciens notebooks)
+notebooks/archives/
