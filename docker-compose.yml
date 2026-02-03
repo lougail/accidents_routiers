@@ -1,5 +1,6 @@
 services:
   api:
+    image: louisgaillard94/uc1-api:v1
     build:
       context: .
       dockerfile: api/Dockerfile
@@ -14,6 +15,7 @@ services:
       - uc1-network
 
   frontend:
+    image: louisgaillard94/uc1-frontend:v1
     build:
       context: .
       dockerfile: frontend/Dockerfile

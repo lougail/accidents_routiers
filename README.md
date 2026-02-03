@@ -57,10 +57,11 @@ docker compose down
 docker compose down -v
 ```
 
-### Image DockerHub
+### Images DockerHub
 
 ```bash
-docker pull lougail/uc1-api:v1
+docker pull louisgaillard94/uc1-api:v1
+docker pull louisgaillard94/uc1-frontend:v1
 ```
 
 ## Structure du projet
