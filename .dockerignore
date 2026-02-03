@@ -7,6 +7,8 @@ venv/
 
 # Données brutes
 données/
+data/*
+!data/UC1_v4_collision.csv
 
 # Notebooks
 notebooks/
@@ -19,7 +21,7 @@ __pycache__/
 *.md
 *.pdf
 *.ipynb
-.env
+.env*
 .DS_Store
 
 # Images d'analyse dans models (pas besoin pour l'API)

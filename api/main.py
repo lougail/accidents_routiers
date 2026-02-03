@@ -11,6 +11,7 @@ Lancement :
   uvicorn api.main:app --reload
 """
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -19,6 +20,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.schemas import AccidentInput, PredictionResponse, HealthResponse
 from api.model import load_all_models, detect_version, build_features
 from api.database import init_db, save_prediction
+
+# Origines autorisées pour CORS (configurable via env)
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:8501,http://frontend:8501"
+).split(",")
 
 # --- État applicatif (chargé au démarrage) ---
 models: dict = {}
@@ -47,9 +54,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 

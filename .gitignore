@@ -8,6 +8,7 @@ venv/
 
 # Data files (782 Mo — téléchargeables sur data.gouv.fr)
 données/
+data/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -30,8 +31,11 @@ catboost_info/
 # Archives (anciens notebooks)
 notebooks/archives/
 
-# Environment variables
+# Environment variables (secrets)
 .env
+.env.api
+.env.db
+.env.frontend
 
 # Database
 predictions.db

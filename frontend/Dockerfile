@@ -10,6 +10,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 RUN uv pip install --system --no-cache -r requirements.txt
 
 COPY frontend/ ./frontend/
+COPY data/UC1_v4_collision.csv ./data/
+COPY models/metadata_UC1_api.json ./models/
 
 RUN useradd --create-home uc1
 RUN chown -R uc1:uc1 /app
