@@ -29,8 +29,10 @@ A partir des données BAAC (Bulletin d'Analyse des Accidents Corporels) 2021-202
 git clone https://github.com/lougail/accidents_routiers.git
 cd accidents_routiers
 
-# Copier le fichier d'environnement
-cp .env.example .env
+# Copier les fichiers d'environnement
+cp .env.api.example .env.api
+cp .env.db.example .env.db
+cp .env.frontend.example .env.frontend
 
 # Lancer la stack
 docker compose up --build
@@ -85,7 +87,9 @@ accidents_routiers/
 ├── models/                     # Modèles entraînés (.joblib)
 ├── notebooks/                  # Pipeline d'analyse
 ├── docker-compose.yml          # Orchestration des services
-├── .env.example                # Template variables d'environnement
+├── .env.api.example            # Variables API
+├── .env.db.example             # Variables PostgreSQL
+├── .env.frontend.example       # Variables frontend
 ├── .dockerignore
 └── README.md
 ```
@@ -110,13 +114,28 @@ accidents_routiers/
 
 ## Variables d'environnement
 
+Chaque service a son propre fichier `.env` :
+
+### `.env.db` — PostgreSQL
+
 | Variable | Description | Défaut |
 |----------|-------------|--------|
 | `POSTGRES_USER` | Utilisateur PostgreSQL | `uc1` |
 | `POSTGRES_PASSWORD` | Mot de passe PostgreSQL | `uc1password` |
 | `POSTGRES_DB` | Nom de la base | `uc1db` |
+
+### `.env.api` — API FastAPI
+
+| Variable | Description | Défaut |
+|----------|-------------|--------|
 | `DATABASE_URL` | URL de connexion BDD | `postgresql://uc1:uc1password@db:5432/uc1db` |
-| `API_URL` | URL de l'API (pour le frontend) | `http://api:8000` |
+| `CORS_ORIGINS` | Origines autorisées (séparées par virgule) | `http://localhost:8501,http://frontend:8501` |
+
+### `.env.frontend` — Streamlit
+
+| Variable | Description | Défaut |
+|----------|-------------|--------|
+| `API_URL` | URL de l'API | `http://api:8000` |
 
 ## Installation locale (sans Docker)
 
