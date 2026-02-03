@@ -1,0 +1,12 @@
+# API & Frontend
+streamlit
+requests
+
+# Data manipulation
+pandas
+
+# Visualisation
+plotly
+
+# Utils
+uv

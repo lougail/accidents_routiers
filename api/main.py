@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.schemas import AccidentInput, PredictionResponse, HealthResponse
 from api.model import load_all_models, detect_version, build_features
+from api.database import init_db, save_prediction
 
 # --- État applicatif (chargé au démarrage) ---
 models: dict = {}
@@ -30,6 +31,7 @@ async def lifespan(app: FastAPI):
     """Charge les modèles au démarrage, libère les ressources à l'arrêt."""
     global models, metadata, dep_mapping
     models, metadata, dep_mapping = load_all_models()
+    init_db()
     yield
     models.clear()
     metadata.clear()
@@ -87,6 +89,15 @@ def predict(data: AccidentInput):
     X = build_features(data, version, metadata, dep_mapping)
     proba = float(models[version].predict_proba(X)[0, 1])
     grave = proba >= threshold
+
+    # Sauvegarde en base de données
+    save_prediction(
+        input_data=data.model_dump(),
+        model_version=version,
+        probability=proba,
+        prediction=int(grave),
+        grave=grave,
+    )
 
     model_info = metadata.get("models", {}).get(version, {})
     return {

@@ -1,0 +1,14 @@
+# API & Frontend
+fastapi
+uvicorn
+
+# Data manipulation
+pandas
+
+# Machine Learning
+joblib
+catboost
+
+# Database
+sqlalchemy
+psycopg2-binary

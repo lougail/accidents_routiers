@@ -29,3 +29,9 @@ catboost_info/
 
 # Archives (anciens notebooks)
 notebooks/archives/
+
+# Environment variables
+.env
+
+# Database
+predictions.db

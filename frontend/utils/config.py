@@ -1,6 +1,7 @@
 """Constantes et configuration partagées entre les pages."""
 
 from pathlib import Path
+import os
 
 # --- Chemins ---
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -8,7 +9,7 @@ DATA_DIR = BASE_DIR / "données"
 MODELS_DIR = BASE_DIR / "models"
 
 # --- API ---
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # --- Départements ---
 DEPARTMENTS = {

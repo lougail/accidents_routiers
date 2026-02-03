@@ -1,0 +1,26 @@
+# Gestion de version
+.git/
+.gitignore
+
+# Environnement
+venv/
+
+# Données brutes
+données/
+
+# Notebooks
+notebooks/
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Fichiers de travail
+*.md
+*.pdf
+*.ipynb
+.env
+.DS_Store
+
+# Images d'analyse dans models (pas besoin pour l'API)
+models/*.png
