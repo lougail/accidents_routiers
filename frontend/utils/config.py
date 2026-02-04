@@ -5,8 +5,7 @@ import os
 
 # --- Chemins ---
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-# Docker utilise "data/", local utilise "données/"
-DATA_DIR = BASE_DIR / "data" if (BASE_DIR / "data").exists() else BASE_DIR / "données"
+DATA_DIR = BASE_DIR / "data"
 MODELS_DIR = BASE_DIR / "models"
 
 # --- API ---

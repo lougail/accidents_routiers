@@ -14,6 +14,12 @@ services:
     networks:
       - uc1-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   frontend:
     image: louisgaillard94/uc1-frontend:v1
@@ -25,10 +31,17 @@ services:
     env_file:
       - .env.frontend
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     networks:
       - uc1-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
 
   db:
     image: postgres:15

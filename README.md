@@ -170,7 +170,7 @@ streamlit run frontend/app.py
 Les fichiers CSV BAAC ne sont pas inclus dans le repo (782 Mo). Pour les obtenir :
 
 1. Télécharger les 4 années (2021-2024) depuis [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere/)
-2. Placer les fichiers dans `données/<année>/`
+2. Placer les fichiers dans `data/<année>/`
 3. Exécuter les notebooks dans l'ordre
 
 208 616 accidents en France métropolitaine, dont 35.4% classés graves.

@@ -5,8 +5,7 @@
 # Environnement
 venv/
 
-# Données brutes
-données/
+# Données brutes (sauf UC1 pour le dashboard)
 data/*
 !data/UC1_v4_collision.csv
 
