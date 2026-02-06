@@ -46,8 +46,14 @@ def client_with_model():
         api.main.metadata["models"] = {
             "v1_base": {
                 "features": [
-                    "dep", "heure", "mois", "weekend", "nuit",
-                    "heure_pointe", "heure_danger", "nuit_eclairee",
+                    "dep",
+                    "heure",
+                    "mois",
+                    "weekend",
+                    "nuit",
+                    "heure_pointe",
+                    "heure_danger",
+                    "nuit_eclairee",
                 ],
                 "n_features": 8,
                 "metrics_test_2024": {"recall": 0.82},
