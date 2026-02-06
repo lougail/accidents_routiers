@@ -37,9 +37,10 @@ class AccidentInput(BaseModel):
 
     # Section 3 — Véhicules (optionnel → active V3)
     nb_vehicules: int | None = Field(None, ge=1, description="Nombre de véhicules")
-    types_vehicules: list[
-        Literal["moto", "velo", "edp", "cyclomoteur", "pieton", "poids_lourd"]
-    ] | None = Field(
+    types_vehicules: (
+        list[Literal["moto", "velo", "edp", "cyclomoteur", "pieton", "poids_lourd"]]
+        | None
+    ) = Field(
         None,
         description="'moto','velo','edp','cyclomoteur','pieton','poids_lourd'",
     )

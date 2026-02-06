@@ -33,7 +33,7 @@ dep_mapping: dict = {}
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) :
+async def lifespan(app: FastAPI):
     """Charge les modèles au démarrage, libère les ressources à l'arrêt."""
     global models, metadata, dep_mapping
     models, metadata, dep_mapping = load_all_models()

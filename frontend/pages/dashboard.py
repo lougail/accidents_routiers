@@ -31,9 +31,7 @@ def load_geojson() -> dict:
 def section_kpis(df: pd.DataFrame, meta: dict):
     """KPIs principaux en haut de page."""
     best_metrics = (
-        meta.get("models", {})
-        .get("v4_collision", {})
-        .get("metrics_test_2024", {})
+        meta.get("models", {}).get("v4_collision", {}).get("metrics_test_2024", {})
     )
 
     k1, k2, k3, k4 = st.columns(4)
@@ -54,7 +52,9 @@ def section_impact_operationnel(df: pd.DataFrame, meta: dict):
         .get("recall_at_threshold", 0)
     )
 
-    nb_graves_2024 = int(df[df["annee"] == 2024]["grave"].sum()) if "annee" in df.columns else 0
+    nb_graves_2024 = (
+        int(df[df["annee"] == 2024]["grave"].sum()) if "annee" in df.columns else 0
+    )
     nb_detectes = int(nb_graves_2024 * best_recall)
     nb_manques = nb_graves_2024 - nb_detectes
 
@@ -88,8 +88,11 @@ def section_distributions_temporelles(df: pd.DataFrame):
         hourly = df.groupby("heure")["grave"].agg(["mean", "count"]).reset_index()
         hourly.columns = ["heure", "taux_gravite", "nb_accidents"]
         fig = px.bar(
-            hourly, x="heure", y="nb_accidents",
-            color="taux_gravite", color_continuous_scale="RdYlGn_r",
+            hourly,
+            x="heure",
+            y="nb_accidents",
+            color="taux_gravite",
+            color_continuous_scale="RdYlGn_r",
             title="Accidents par heure (couleur = taux de gravité)",
             labels={"nb_accidents": "Nombre", "taux_gravite": "Taux gravité"},
         )
@@ -99,15 +102,32 @@ def section_distributions_temporelles(df: pd.DataFrame):
         monthly = df.groupby("mois")["grave"].agg(["mean", "count"]).reset_index()
         monthly.columns = ["mois", "taux_gravite", "nb_accidents"]
         mois_noms = {
-            1: "Jan", 2: "Fév", 3: "Mar", 4: "Avr", 5: "Mai", 6: "Juin",
-            7: "Jul", 8: "Aoû", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Déc",
+            1: "Jan",
+            2: "Fév",
+            3: "Mar",
+            4: "Avr",
+            5: "Mai",
+            6: "Juin",
+            7: "Jul",
+            8: "Aoû",
+            9: "Sep",
+            10: "Oct",
+            11: "Nov",
+            12: "Déc",
         }
         monthly["mois_nom"] = monthly["mois"].map(mois_noms)
         fig = px.bar(
-            monthly, x="mois_nom", y="nb_accidents",
-            color="taux_gravite", color_continuous_scale="RdYlGn_r",
+            monthly,
+            x="mois_nom",
+            y="nb_accidents",
+            color="taux_gravite",
+            color_continuous_scale="RdYlGn_r",
             title="Accidents par mois",
-            labels={"nb_accidents": "Nombre", "taux_gravite": "Taux gravité", "mois_nom": "Mois"},
+            labels={
+                "nb_accidents": "Nombre",
+                "taux_gravite": "Taux gravité",
+                "mois_nom": "Mois",
+            },
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -116,11 +136,7 @@ def section_geographie(df: pd.DataFrame):
     """Carte choropleth + top 15 départements."""
     st.subheader("Répartition géographique")
 
-    dep_stats = (
-        df.groupby("dep")["grave"]
-        .agg(["count", "sum", "mean"])
-        .reset_index()
-    )
+    dep_stats = df.groupby("dep")["grave"].agg(["count", "sum", "mean"]).reset_index()
     dep_stats.columns = ["dep", "nb_accidents", "nb_graves", "taux_gravite"]
     dep_stats["nom"] = dep_stats["dep"].map(DEPARTMENTS)
     dep_stats["label"] = dep_stats["dep"] + " — " + dep_stats["nom"].fillna("")
@@ -146,7 +162,11 @@ def section_geographie(df: pd.DataFrame):
         hover_data={"dep": True, "nb_accidents": True, "taux_gravite": ":.1%"},
         color_continuous_scale=color_scale,
         title=f"{metric_choice} par département",
-        labels={"taux_gravite": "Taux gravité", "nb_accidents": "Nb accidents", "dep": "Code"},
+        labels={
+            "taux_gravite": "Taux gravité",
+            "nb_accidents": "Nb accidents",
+            "dep": "Code",
+        },
     )
     fig_map.update_geos(fitbounds="locations", visible=False)
     fig_map.update_layout(margin={"r": 0, "t": 40, "l": 0, "b": 0}, height=500)
@@ -158,20 +178,34 @@ def section_geographie(df: pd.DataFrame):
     with g1:
         top_volume = dep_stats.nlargest(15, "nb_accidents").sort_values("nb_accidents")
         fig = px.bar(
-            top_volume, x="nb_accidents", y="label", orientation="h",
-            color="taux_gravite", color_continuous_scale="RdYlGn_r",
+            top_volume,
+            x="nb_accidents",
+            y="label",
+            orientation="h",
+            color="taux_gravite",
+            color_continuous_scale="RdYlGn_r",
             title="Top 15 départements (volume)",
-            labels={"nb_accidents": "Nombre d'accidents", "label": "", "taux_gravite": "Taux gravité"},
+            labels={
+                "nb_accidents": "Nombre d'accidents",
+                "label": "",
+                "taux_gravite": "Taux gravité",
+            },
         )
         fig.update_layout(height=500)
         st.plotly_chart(fig, use_container_width=True)
 
     with g2:
         dep_enough = dep_stats[dep_stats["nb_accidents"] >= 500]
-        top_gravite = dep_enough.nlargest(15, "taux_gravite").sort_values("taux_gravite")
+        top_gravite = dep_enough.nlargest(15, "taux_gravite").sort_values(
+            "taux_gravite"
+        )
         fig = px.bar(
-            top_gravite, x="taux_gravite", y="label", orientation="h",
-            color="taux_gravite", color_continuous_scale="Reds",
+            top_gravite,
+            x="taux_gravite",
+            y="label",
+            orientation="h",
+            color="taux_gravite",
+            color_continuous_scale="Reds",
             title="Top 15 départements (taux de gravité)",
             labels={"taux_gravite": "Taux de gravité", "label": ""},
         )
@@ -184,10 +218,20 @@ def section_facteurs_risque(df: pd.DataFrame):
     st.subheader("Facteurs de risque")
 
     risk_features = [
-        "hors_agglo", "bidirectionnelle", "haute_vitesse", "meteo_degradee",
-        "surface_glissante", "has_moto", "has_velo", "has_pieton",
-        "has_vehicule_lourd", "collision_frontale", "collision_solo",
-        "nuit", "weekend", "intersection_complexe",
+        "hors_agglo",
+        "bidirectionnelle",
+        "haute_vitesse",
+        "meteo_degradee",
+        "surface_glissante",
+        "has_moto",
+        "has_velo",
+        "has_pieton",
+        "has_vehicule_lourd",
+        "collision_frontale",
+        "collision_solo",
+        "nuit",
+        "weekend",
+        "intersection_complexe",
     ]
     available = [f for f in risk_features if f in df.columns]
 
@@ -195,19 +239,27 @@ def section_facteurs_risque(df: pd.DataFrame):
     for feat in available:
         taux_present = df[df[feat] == 1]["grave"].mean()
         taux_absent = df[df[feat] == 0]["grave"].mean()
-        risk_data.append({
-            "feature": feature_label(feat),
-            "ratio": taux_present / taux_absent if taux_absent > 0 else 0,
-        })
+        risk_data.append(
+            {
+                "feature": feature_label(feat),
+                "ratio": taux_present / taux_absent if taux_absent > 0 else 0,
+            }
+        )
 
     df_risk = pd.DataFrame(risk_data).sort_values("ratio", ascending=True)
     fig = px.bar(
-        df_risk, x="ratio", y="feature", orientation="h",
-        color="ratio", color_continuous_scale="Reds",
+        df_risk,
+        x="ratio",
+        y="feature",
+        orientation="h",
+        color="ratio",
+        color_continuous_scale="Reds",
         title="Ratio de gravité (présent vs absent)",
         labels={"ratio": "Ratio de risque", "feature": ""},
     )
-    fig.add_vline(x=1, line_dash="dash", line_color="gray", annotation_text="Référence (x1)")
+    fig.add_vline(
+        x=1, line_dash="dash", line_color="gray", annotation_text="Référence (x1)"
+    )
     fig.update_layout(height=500)
     st.plotly_chart(fig, use_container_width=True)
     st.caption(
@@ -236,8 +288,12 @@ def section_feature_importance():
     fi_df = pd.DataFrame(fi_data[version_sel])
     fi_df["label"] = fi_df["feature"].map(feature_label)
     fig = px.bar(
-        fi_df.sort_values("importance"), x="importance", y="label", orientation="h",
-        color="importance", color_continuous_scale="Blues",
+        fi_df.sort_values("importance"),
+        x="importance",
+        y="label",
+        orientation="h",
+        color="importance",
+        color_continuous_scale="Blues",
         title=f"Top 15 features — {version_sel}",
         labels={"label": "", "importance": "Importance"},
     )
@@ -255,27 +311,36 @@ def section_comparaison_modeles(meta: dict):
     perf_data = []
     for version, info in meta["models"].items():
         m = info.get("metrics_test_2024", {})
-        perf_data.append({
-            "version": VERSION_LABELS.get(version, version),
-            "ROC-AUC": m.get("roc_auc", 0),
-            "Recall": m.get("recall_at_threshold", 0),
-            "Precision": m.get("precision_at_threshold", 0),
-        })
+        perf_data.append(
+            {
+                "version": VERSION_LABELS.get(version, version),
+                "ROC-AUC": m.get("roc_auc", 0),
+                "Recall": m.get("recall_at_threshold", 0),
+                "Precision": m.get("precision_at_threshold", 0),
+            }
+        )
 
     df_perf = pd.DataFrame(perf_data)
     colors = {"ROC-AUC": "#636EFA", "Recall": "#EF553B", "Precision": "#00CC96"}
 
     fig = go.Figure()
     for metric in ("ROC-AUC", "Recall", "Precision"):
-        fig.add_trace(go.Bar(
-            name=metric,
-            x=df_perf["version"],
-            y=df_perf[metric],
-            marker_color=colors[metric],
-            text=df_perf[metric].apply(lambda v: f"{v:.2f}"),
-            textposition="outside",
-        ))
-    fig.update_layout(barmode="group", title="Métriques par version (test 2024)", yaxis_range=[0, 1], height=400)
+        fig.add_trace(
+            go.Bar(
+                name=metric,
+                x=df_perf["version"],
+                y=df_perf[metric],
+                marker_color=colors[metric],
+                text=df_perf[metric].apply(lambda v: f"{v:.2f}"),
+                textposition="outside",
+            )
+        )
+    fig.update_layout(
+        barmode="group",
+        title="Métriques par version (test 2024)",
+        yaxis_range=[0, 1],
+        height=400,
+    )
     st.plotly_chart(fig, use_container_width=True)
     st.caption(
         "Chaque version correspond au niveau d'information disponible lors de l'appel. "
@@ -293,7 +358,11 @@ def section_evolution_annuelle(df: pd.DataFrame):
 
     yearly = (
         df.groupby("annee")
-        .agg(nb_accidents=("grave", "count"), nb_graves=("grave", "sum"), taux=("grave", "mean"))
+        .agg(
+            nb_accidents=("grave", "count"),
+            nb_graves=("grave", "sum"),
+            taux=("grave", "mean"),
+        )
         .reset_index()
     )
     yearly["annee_str"] = yearly["annee"].astype(str)
@@ -301,8 +370,10 @@ def section_evolution_annuelle(df: pd.DataFrame):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(
         go.Bar(
-            x=yearly["annee_str"], y=yearly["nb_accidents"],
-            name="Total accidents", marker_color="steelblue",
+            x=yearly["annee_str"],
+            y=yearly["nb_accidents"],
+            name="Total accidents",
+            marker_color="steelblue",
             text=yearly["nb_accidents"].apply(lambda v: f"{v:,}"),
             textposition="outside",
         ),
@@ -310,8 +381,10 @@ def section_evolution_annuelle(df: pd.DataFrame):
     )
     fig.add_trace(
         go.Scatter(
-            x=yearly["annee_str"], y=yearly["taux"] * 100,
-            name="Taux gravité (%)", mode="lines+markers+text",
+            x=yearly["annee_str"],
+            y=yearly["taux"] * 100,
+            name="Taux gravité (%)",
+            mode="lines+markers+text",
             text=yearly["taux"].apply(lambda v: f"{v:.1%}"),
             textposition="top center",
             line=dict(color="crimson", width=3),
