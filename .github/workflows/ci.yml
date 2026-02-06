@@ -64,6 +64,3 @@ jobs:
 
             - name: Security check
               run: uv run bandit -r ./api
-
-    tests:
-        # TODO: Ajouter les tests unitaires
