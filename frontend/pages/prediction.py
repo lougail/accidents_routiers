@@ -25,7 +25,9 @@ def render_form() -> dict | None:
 
     with c1:
         dep_options = [f"{code} — {name}" for code, name in sorted(DEPARTMENTS.items())]
-        dep_selected = st.selectbox("Département", dep_options, index=dep_options.index("75 — Paris"))
+        dep_selected = st.selectbox(
+            "Département", dep_options, index=dep_options.index("75 — Paris")
+        )
         departement = dep_selected.split(" — ")[0]
 
     with c2:
@@ -33,13 +35,25 @@ def render_form() -> dict | None:
         mois = st.slider("Mois", 1, 12, 6)
 
     with c3:
-        jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+        jours = [
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+        ]
         jour_semaine = st.selectbox("Jour", jours, index=0)
         jour_idx = jours.index(jour_semaine)
 
         lum_options = ["Jour", "Nuit éclairée", "Nuit non éclairée"]
         luminosite = st.selectbox("Luminosité", lum_options)
-        lum_map = {"Jour": "jour", "Nuit éclairée": "nuit_eclairee", "Nuit non éclairée": "nuit_non_eclairee"}
+        lum_map = {
+            "Jour": "jour",
+            "Nuit éclairée": "nuit_eclairee",
+            "Nuit non éclairée": "nuit_non_eclairee",
+        }
 
     # --- Section 2 : Route (optionnel) ---
     with st.expander("2. Caractéristiques de la route (optionnel)"):
@@ -50,7 +64,8 @@ def render_form() -> dict | None:
                 vma = st.slider("VMA (km/h)", 20, 130, 50)
                 nbv = st.number_input("Nombre de voies", 1, 10, 2)
                 type_route = st.selectbox(
-                    "Type de route", ["Communale", "Départementale", "Autoroute", "Autre"],
+                    "Type de route",
+                    ["Communale", "Départementale", "Autoroute", "Autre"],
                 )
             with c5:
                 en_agglo = st.checkbox("En agglomération", value=True)
@@ -78,10 +93,15 @@ def render_form() -> dict | None:
                 "Type de collision",
                 ["Frontale", "Arrière", "Côté", "Solo (sans collision)"],
             )
-            col_map = {"Frontale": "frontale", "Arrière": "arriere", "Côté": "cote", "Solo (sans collision)": "solo"}
+            col_map = {
+                "Frontale": "frontale",
+                "Arrière": "arriere",
+                "Côté": "cote",
+                "Solo (sans collision)": "solo",
+            }
 
     # --- Soumission ---
-    if not st.button("\U0001F6A8 Prédire la gravité", type="primary"):
+    if not st.button("\U0001f6a8 Prédire la gravité", type="primary"):
         return None
 
     payload = {
@@ -92,17 +112,19 @@ def render_form() -> dict | None:
         "luminosite": lum_map[luminosite],
     }
     if use_s2:
-        payload.update({
-            "vma": vma,
-            "nbv": int(nbv),
-            "type_route": type_route.lower(),
-            "en_agglomeration": en_agglo,
-            "bidirectionnelle": bidirect,
-            "meteo_degradee": meteo_deg,
-            "surface_glissante": surface_glis,
-            "intersection": intersect,
-            "route_en_pente": pente,
-        })
+        payload.update(
+            {
+                "vma": vma,
+                "nbv": int(nbv),
+                "type_route": type_route.lower(),
+                "en_agglomeration": en_agglo,
+                "bidirectionnelle": bidirect,
+                "meteo_degradee": meteo_deg,
+                "surface_glissante": surface_glis,
+                "intersection": intersect,
+                "route_en_pente": pente,
+            }
+        )
     if use_s3:
         payload["nb_vehicules"] = int(nb_veh)
         if types_veh:

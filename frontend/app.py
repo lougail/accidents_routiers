@@ -12,14 +12,18 @@ import streamlit as st
 
 st.set_page_config(
     page_title="UC1 — Priorisation des Secours",
-    page_icon="\U0001F691",
+    page_icon="\U0001f691",
     layout="wide",
 )
 
 # --- Navigation ---
-pg = st.navigation([
-    st.Page("pages/prediction.py", title="Prédiction", icon="\U0001F3AF", default=True),
-    st.Page("pages/dashboard.py", title="Dashboard", icon="\U0001F4CA"),
-])
+pg = st.navigation(
+    [
+        st.Page(
+            "pages/prediction.py", title="Prédiction", icon="\U0001f3af", default=True
+        ),
+        st.Page("pages/dashboard.py", title="Dashboard", icon="\U0001f4ca"),
+    ]
+)
 
 pg.run()
