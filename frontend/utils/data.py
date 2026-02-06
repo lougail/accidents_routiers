@@ -1,6 +1,7 @@
 """Chargement et mise en cache des données partagées entre les pages."""
 
 import json
+
 import pandas as pd
 import streamlit as st
 

@@ -17,14 +17,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.schemas import AccidentInput, PredictionResponse, HealthResponse
-from api.model import load_all_models, detect_version, build_features
 from api.database import init_db, save_prediction
+from api.model import build_features, detect_version, load_all_models
+from api.schemas import AccidentInput, HealthResponse, PredictionResponse
 
 # Origines autorisées pour CORS (configurable via env)
 CORS_ORIGINS = os.getenv(
-    "CORS_ORIGINS",
-    "http://localhost:8501,http://frontend:8501"
+    "CORS_ORIGINS", "http://localhost:8501,http://frontend:8501"
 ).split(",")
 
 # --- État applicatif (chargé au démarrage) ---
@@ -34,7 +33,7 @@ dep_mapping: dict = {}
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) :
     """Charge les modèles au démarrage, libère les ressources à l'arrêt."""
     global models, metadata, dep_mapping
     models, metadata, dep_mapping = load_all_models()
@@ -65,18 +64,18 @@ app.add_middleware(
 
 
 @app.get("/health", response_model=HealthResponse)
-def health():
+def health() -> HealthResponse:
     """Vérifie que l'API et les modèles sont opérationnels."""
-    return {
-        "status": "ok" if models else "no_models",
-        "models_loaded": list(models.keys()),
-        "n_models": len(models),
-        "threshold": metadata.get("threshold", 0.45),
-    }
+    return HealthResponse(
+        status="ok" if models else "no_models",
+        models_loaded=list(models.keys()),
+        n_models=len(models),
+        threshold=metadata.get("threshold", 0.45),
+    )
 
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(data: AccidentInput):
+def predict(data: AccidentInput) -> PredictionResponse:
     """Prédit la gravité d'un accident.
 
     Le modèle est sélectionné automatiquement selon les champs renseignés :
@@ -107,21 +106,21 @@ def predict(data: AccidentInput):
     )
 
     model_info = metadata.get("models", {}).get(version, {})
-    return {
-        "prediction": int(grave),
-        "probabilite": round(proba, 4),
-        "grave": grave,
-        "seuil": threshold,
-        "version_modele": version,
-        "n_features": model_info.get("n_features", 0),
-        "metriques_modele": model_info.get("metrics_test_2024", {}),
-    }
+    return PredictionResponse(
+        prediction=int(grave),
+        probabilite=round(proba, 4),
+        grave=grave,
+        seuil=threshold,
+        version_modele=version,
+        n_features=model_info.get("n_features", 0),
+        metriques_modele=model_info.get("metrics_test_2024", {}),
+    )
 
 
 @app.get("/feature-importances")
-def feature_importances():
+def feature_importances() -> dict[str, list[dict[str, float]]]:
     """Retourne le top 15 features par modèle."""
-    result = {}
+    result: dict[str, list[dict[str, float]]] = {}
     for version, model in models.items():
         if hasattr(model, "get_feature_importance"):
             importances = model.get_feature_importance()
@@ -130,6 +129,7 @@ def feature_importances():
                 zip(features, importances.tolist()), key=lambda x: x[1], reverse=True
             )
             result[version] = [
-                {"feature": feat, "importance": round(imp, 4)} for feat, imp in pairs[:15]
+                {"feature": feat, "importance": round(imp, 4)}
+                for feat, imp in pairs[:15]
             ]
     return result

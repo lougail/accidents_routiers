@@ -3,13 +3,12 @@
 import json
 from urllib.request import urlopen
 
-import streamlit as st
-import requests
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import requests
+import streamlit as st
 from plotly.subplots import make_subplots
-
 from utils.config import API_URL, DEPARTMENTS, VERSION_LABELS, feature_label
 from utils.data import load_dataset, load_metadata
 

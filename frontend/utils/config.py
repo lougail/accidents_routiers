@@ -1,7 +1,7 @@
 """Constantes et configuration partagées entre les pages."""
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 # --- Chemins ---
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

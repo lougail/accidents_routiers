@@ -1,0 +1,55 @@
+[project]
+name = "accidents-routiers"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.4.2",
+    "pandas>=3.0.0",
+]
+
+[dependency-groups]
+api = [
+    "catboost>=1.2.8",
+    "fastapi[standard]>=0.128.1",
+    "joblib>=1.5.3",
+    "psycopg2-binary>=2.9.11",
+    "sqlalchemy>=2.0.46",
+    "uvicorn>=0.40.0",
+]
+dev = [
+    "bandit>=1.9.3",
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "ruff>=0.15.0",
+]
+frontend = [
+    "plotly>=6.5.2",
+    "requests>=2.32.5",
+    "streamlit>=1.19.0",
+]
+ml = [
+    "catboost>=1.2.8",
+    "imbalanced-learn>=0.14.1",
+    "jupyter>=1.1.1",
+    "kaleido>=1.2.0",
+    "lightgbm>=4.6.0",
+    "matplotlib>=3.10.8",
+    "plotly>=6.5.2",
+    "scikit-learn>=1.8.0",
+    "seaborn>=0.13.2",
+    "xgboost>=3.1.3",
+]
+
+[tool.ruff]
+exclude = ["notebooks/", "venv/", ".venv/"]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]  # Erreurs, warnings, imports
+ignore = ["E501"]  # Ignore les lignes trop longues
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = ["notebooks/", "venv/", ".venv/"]

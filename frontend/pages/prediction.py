@@ -1,9 +1,8 @@
 """Page de prédiction de gravité d'un accident."""
 
-import streamlit as st
-import requests
 import plotly.graph_objects as go
-
+import requests
+import streamlit as st
 from utils.config import API_URL, DEPARTMENTS, VERSION_LABELS
 
 

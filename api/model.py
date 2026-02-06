@@ -3,10 +3,14 @@
 Ce module isole la logique ML du framework web (pas d'import FastAPI).
 """
 
-import joblib
 import json
-import pandas as pd
+import logging
 from pathlib import Path
+
+import joblib
+import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = BASE_DIR / "models"
@@ -22,7 +26,9 @@ def load_all_models() -> tuple[dict, dict, dict]:
     """
     meta_path = MODELS_DIR / "metadata_UC1_api.json"
     if not meta_path.exists():
-        print(f"ERREUR : {meta_path} introuvable. Exécutez d'abord le notebook 05a.")
+        logger.error(
+            "Fichier %s introuvable. Exécutez d'abord le notebook 05a.", meta_path
+        )
         return {}, {}, {}
 
     with open(meta_path) as f:
@@ -36,11 +42,15 @@ def load_all_models() -> tuple[dict, dict, dict]:
         if model_path.exists():
             models[version] = joblib.load(model_path)
             n_feat = metadata.get("models", {}).get(version, {}).get("n_features", "?")
-            print(f"  Modèle chargé : {version} ({n_feat} features)")
+            logger.info("Modèle chargé : %s (%s features)", version, n_feat)
         else:
-            print(f"  ATTENTION : {model_path} introuvable")
+            logger.warning("Fichier %s introuvable", model_path)
 
-    print(f"\n{len(models)} modèle(s) chargé(s), seuil = {metadata.get('threshold', 0.45)}")
+    logger.info(
+        "%d modèle(s) chargé(s), seuil = %s",
+        len(models),
+        metadata.get("threshold", 0.45),
+    )
     return models, metadata, dep_mapping
 
 
@@ -50,12 +60,18 @@ def detect_version(data) -> str:
         return "v4_collision"
     if data.nb_vehicules is not None or data.types_vehicules is not None:
         return "v3_vehicules"
-    if data.vma is not None or data.type_route is not None or data.en_agglomeration is not None:
+    if (
+        data.vma is not None
+        or data.type_route is not None
+        or data.en_agglomeration is not None
+    ):
         return "v2_route"
     return "v1_base"
 
 
-def build_features(data, version: str, metadata: dict, dep_mapping: dict) -> pd.DataFrame:
+def build_features(
+    data, version: str, metadata: dict, dep_mapping: dict
+) -> pd.DataFrame:
     """Transforme les inputs bruts en DataFrame de features pour le modèle."""
     f: dict = {}
 
@@ -78,7 +94,9 @@ def build_features(data, version: str, metadata: dict, dep_mapping: dict) -> pd.
         f["vma"] = vma
         f["nbv"] = data.nbv if data.nbv is not None else 2
 
-        hors_agglo = not data.en_agglomeration if data.en_agglomeration is not None else False
+        hors_agglo = (
+            not data.en_agglomeration if data.en_agglomeration is not None else False
+        )
         f["hors_agglo"] = int(hors_agglo)
 
         bidirect = data.bidirectionnelle if data.bidirectionnelle is not None else False
@@ -113,7 +131,14 @@ def build_features(data, version: str, metadata: dict, dep_mapping: dict) -> pd.
         f["has_vehicule_lourd"] = int(has_lourd)
 
         has_vulnerable = any(
-            f.get(k, 0) for k in ("has_moto", "has_velo", "has_edp", "has_cyclomoteur", "has_pieton")
+            f.get(k, 0)
+            for k in (
+                "has_moto",
+                "has_velo",
+                "has_edp",
+                "has_cyclomoteur",
+                "has_pieton",
+            )
         )
         f["collision_asymetrique"] = int(has_lourd and has_vulnerable)
         f["nb_vehicules"] = data.nb_vehicules if data.nb_vehicules is not None else 1
