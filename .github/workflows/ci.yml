@@ -1,0 +1,69 @@
+name: CI
+
+on:
+    push:
+        branches: [master, develop]
+    pull_request:
+        branches: [master, develop]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Set up uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+                cache-dependency-glob: "uv.lock"
+
+            - name: Install dependencies
+              run: uv sync --group dev
+
+            - name: Ruff check (linting)
+              run: uv run ruff check .
+
+            - name: Ruff format (formatting)
+              run: uv run ruff format --check .
+
+
+    typecheck:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Set up uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+                cache-dependency-glob: "uv.lock"
+
+            - name: Install dependencies
+              run: uv sync --group dev
+              
+            - name: Type check
+              run: uv run mypy ./api
+
+    security:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+              
+            - name: Set up uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+                cache-dependency-glob: "uv.lock"
+
+            - name: Install dependencies
+              run: uv sync --group dev
+
+            - name: Security check
+              run: uv run bandit -r ./api
+
+    tests:
+        # TODO: Ajouter les tests unitaires
