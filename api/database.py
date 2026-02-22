@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import JSON, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
@@ -18,9 +18,7 @@ class Prediction(Base):
     __tablename__ = "predictions"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    timestamp: Mapped[datetime] = mapped_column(
-        default=lambda: datetime.now(timezone.utc)
-    )
+    timestamp: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
     input_data: Mapped[dict] = mapped_column(JSON)
     model_version: Mapped[str]
     probability: Mapped[float]
@@ -28,7 +26,7 @@ class Prediction(Base):
     grave: Mapped[str]
 
 
-def init_db():
+def init_db() -> None:
     Base.metadata.create_all(bind=engine)
 
 
@@ -38,7 +36,7 @@ def save_prediction(
     probability: float,
     prediction: int,
     grave: bool,
-):
+) -> None:
     db = SessionLocal()
     try:
         db_prediction = Prediction(

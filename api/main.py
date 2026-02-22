@@ -12,6 +12,7 @@ Lancement :
 """
 
 import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -33,7 +34,7 @@ dep_mapping: dict = {}
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Charge les modèles au démarrage, libère les ressources à l'arrêt."""
     global models, metadata, dep_mapping
     models, metadata, dep_mapping = load_all_models()
@@ -126,7 +127,9 @@ def feature_importances() -> dict[str, list[dict[str, float]]]:
             importances = model.get_feature_importance()
             features = metadata["models"][version]["features"]
             pairs = sorted(
-                zip(features, importances.tolist()), key=lambda x: x[1], reverse=True
+                zip(features, importances.tolist(), strict=False),
+                key=lambda x: x[1],
+                reverse=True,
             )
             result[version] = [
                 {"feature": feat, "importance": round(imp, 4)}

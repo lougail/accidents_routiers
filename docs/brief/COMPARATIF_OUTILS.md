@@ -221,4 +221,3 @@ Alternative : **Mypy** reste pertinent si tu as besoin de plugins spécifiques (
 | Type Checker | Pyright | 9/10 | Rapide, intégration VS Code native, mode strict complet |
 | Tests | pytest | 9/10 | Standard de facto, syntaxe simple, écosystème de plugins |
 | Security | Bandit + pip-audit | 8/10 | Combo gratuit : code + dépendances |
-

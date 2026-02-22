@@ -447,4 +447,3 @@ def calculate_sum(a: int, b: int) -> int:
 ```
 
 > L'intérêt : ta doc API est toujours à jour car elle est générée directement depuis le code. Plus de doc obsolète qui ne correspond plus au code.
-
