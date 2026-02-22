@@ -1,27 +1,16 @@
-# Gestion de version
-.git/
-.gitignore
-
-# Environnement
-venv/
-
-# Données brutes (sauf UC1 pour le dashboard)
-data/*
-!data/UC1_v4_collision.csv
-
-# Notebooks
-notebooks/
-
-# Cache Python
-__pycache__/
+.git
+.github
+.venv
+venv
+.mypy_cache
+.pytest_cache
+.ruff_cache
+__pycache__
 *.pyc
-
-# Fichiers de travail
-*.md
-*.pdf
-*.ipynb
+notebooks/
+docs/
+data/
+frontend/
 .env*
+*.db
 .DS_Store
-
-# Images d'analyse dans models (pas besoin pour l'API)
-models/*.png
