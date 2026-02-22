@@ -94,48 +94,9 @@ accidents_routiers/
 └── README.md
 ```
 
-## Architecture Docker
+L'architecture est composée de 3 services Docker (Frontend Streamlit, API FastAPI, PostgreSQL) reliés par un réseau interne. Les données PostgreSQL sont persistées via un volume Docker.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Docker Network                        │
-│                                                          │
-│  ┌──────────┐    ┌──────────┐    ┌──────────────────┐  │
-│  │ Frontend │───▶│   API    │───▶│   PostgreSQL     │  │
-│  │ :8501    │    │  :8000   │    │     :5432        │  │
-│  └──────────┘    └──────────┘    └──────────────────┘  │
-│                                          │              │
-│                                   ┌──────▼──────┐      │
-│                                   │   Volume    │      │
-│                                   │ (persistance)│      │
-│                                   └─────────────┘      │
-└─────────────────────────────────────────────────────────┘
-```
-
-## Variables d'environnement
-
-Chaque service a son propre fichier `.env` :
-
-### `.env.db` — PostgreSQL
-
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `POSTGRES_USER` | Utilisateur PostgreSQL | `uc1` |
-| `POSTGRES_PASSWORD` | Mot de passe PostgreSQL | `uc1password` |
-| `POSTGRES_DB` | Nom de la base | `uc1db` |
-
-### `.env.api` — API FastAPI
-
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `DATABASE_URL` | URL de connexion BDD | `postgresql://uc1:uc1password@db:5432/uc1db` |
-| `CORS_ORIGINS` | Origines autorisées (séparées par virgule) | `http://localhost:8501,http://frontend:8501` |
-
-### `.env.frontend` — Streamlit
-
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `API_URL` | URL de l'API | `http://api:8000` |
+Les variables d'environnement sont configurées via les fichiers `.env.*`. Des fichiers `.env.*.example` sont fournis comme modèles.
 
 ## Installation locale (sans Docker)
 
