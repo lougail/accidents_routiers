@@ -101,15 +101,13 @@ Les variables d'environnement sont configurées via les fichiers `.env.*`. Des f
 ## Installation locale (sans Docker)
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+uv sync --group api --group frontend
 
 # Terminal 1 : API
-uvicorn api.main:app --reload
+uv run uvicorn api.main:app --reload
 
 # Terminal 2 : Frontend
-streamlit run frontend/app.py
+uv run streamlit run frontend/app.py
 ```
 
 ## Pipeline de notebooks
