@@ -3,12 +3,18 @@
 Ce module isole la logique ML du framework web (pas d'import FastAPI).
 """
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import joblib
 import pandas as pd
+
+if TYPE_CHECKING:
+    from api.schemas import AccidentInput
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +60,7 @@ def load_all_models() -> tuple[dict, dict, dict]:
     return models, metadata, dep_mapping
 
 
-def detect_version(data) -> str:
+def detect_version(data: AccidentInput) -> str:
     """Détecte le modèle à utiliser selon les champs renseignés."""
     if data.type_collision is not None:
         return "v4_collision"
@@ -70,7 +76,7 @@ def detect_version(data) -> str:
 
 
 def build_features(
-    data, version: str, metadata: dict, dep_mapping: dict
+    data: AccidentInput, version: str, metadata: dict, dep_mapping: dict
 ) -> pd.DataFrame:
     """Transforme les inputs bruts en DataFrame de features pour le modèle."""
     f: dict = {}

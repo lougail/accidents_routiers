@@ -162,7 +162,7 @@ def render_result(pred: dict):
             },
         )
     )
-    fig.update_layout(height=300, margin=dict(t=60, b=0))
+    fig.update_layout(height=300, margin={"t": 60, "b": 0})
     st.plotly_chart(fig, use_container_width=True)
 
     if grave:

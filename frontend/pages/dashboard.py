@@ -21,7 +21,7 @@ GEOJSON_URL = (
 @st.cache_data
 def load_geojson() -> dict:
     """Charge le GeoJSON des départements français (mis en cache)."""
-    with urlopen(GEOJSON_URL) as response:
+    with urlopen(GEOJSON_URL) as response:  # noqa: S310
         return json.load(response)
 
 
@@ -387,8 +387,8 @@ def section_evolution_annuelle(df: pd.DataFrame):
             mode="lines+markers+text",
             text=yearly["taux"].apply(lambda v: f"{v:.1%}"),
             textposition="top center",
-            line=dict(color="crimson", width=3),
-            marker=dict(size=10),
+            line={"color": "crimson", "width": 3},
+            marker={"size": 10},
         ),
         secondary_y=True,
     )
