@@ -5,6 +5,7 @@ __pycache__/
 
 # Virtual environment
 venv/
+.venv/
 
 # Data files (782 Mo — téléchargeables sur data.gouv.fr)
 data/
@@ -19,10 +20,6 @@ data/
 # OS
 .DS_Store
 Thumbs.db
-
-# Notes internes (pas sur le repo)
-PLAN.md
-SYNTHESE_PROJET.md
 
 # CatBoost training logs
 catboost_info/
