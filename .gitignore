@@ -21,7 +21,11 @@ data/
 .DS_Store
 Thumbs.db
 
-# CatBoost training logs
+# Tool caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
 catboost_info/
 
 # Archives (anciens notebooks)
