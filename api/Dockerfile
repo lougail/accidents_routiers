@@ -5,9 +5,9 @@ LABEL description="Docker image for the UC1 project"
 
 WORKDIR /app
 
-COPY api/requirements.txt .
+COPY pyproject.toml uv.lock ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
-RUN uv pip install --system --no-cache -r requirements.txt
+RUN uv sync --group api --no-dev --no-editable
 
 COPY api/ ./api/
 COPY models/ ./models/

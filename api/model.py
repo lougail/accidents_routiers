@@ -18,6 +18,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_THRESHOLD = 0.45
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = BASE_DIR / "models"
 
@@ -55,7 +57,7 @@ def load_all_models() -> tuple[dict, dict, dict]:
     logger.info(
         "%d modèle(s) chargé(s), seuil = %s",
         len(models),
-        metadata.get("threshold", 0.45),
+        metadata.get("threshold", DEFAULT_THRESHOLD),
     )
     return models, metadata, dep_mapping
 

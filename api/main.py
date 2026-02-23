@@ -19,7 +19,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.database import init_db, save_prediction
-from api.model import build_features, detect_version, load_all_models
+from api.model import DEFAULT_THRESHOLD, build_features, detect_version, load_all_models
 from api.schemas import AccidentInput, HealthResponse, PredictionResponse
 
 # Origines autorisées pour CORS (configurable via env)
@@ -71,7 +71,7 @@ def health() -> HealthResponse:
         status="ok" if models else "no_models",
         models_loaded=list(models.keys()),
         n_models=len(models),
-        threshold=metadata.get("threshold", 0.45),
+        threshold=metadata.get("threshold", DEFAULT_THRESHOLD),
     )
 
 
@@ -92,7 +92,7 @@ def predict(data: AccidentInput) -> PredictionResponse:
     if version not in models:
         raise HTTPException(status_code=503, detail=f"Modèle {version} non disponible")
 
-    threshold = metadata.get("threshold", 0.45)
+    threshold = metadata.get("threshold", DEFAULT_THRESHOLD)
     X = build_features(data, version, metadata, dep_mapping)
     proba = float(models[version].predict_proba(X)[0, 1])
     grave = proba >= threshold
