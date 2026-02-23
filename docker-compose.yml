@@ -1,6 +1,6 @@
 services:
   api:
-    image: louisgaillard94/uc1-api:v1
+    image: ghcr.io/lougail/accidents_routiers/api:latest
     build:
       context: .
       dockerfile: api/Dockerfile
@@ -22,7 +22,7 @@ services:
       start_period: 10s
 
   frontend:
-    image: louisgaillard94/uc1-frontend:v1
+    image: ghcr.io/lougail/accidents_routiers/frontend:latest
     build:
       context: .
       dockerfile: frontend/Dockerfile

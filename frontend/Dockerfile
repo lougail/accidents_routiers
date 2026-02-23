@@ -5,9 +5,9 @@ LABEL description="Docker image for the UC1 project"
 
 WORKDIR /app
 
-COPY frontend/requirements.txt .
+COPY pyproject.toml uv.lock README.md ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
-RUN uv pip install --system --no-cache -r requirements.txt
+RUN uv sync --group frontend --no-dev --no-editable
 
 COPY frontend/ ./frontend/
 COPY models/metadata_UC1_api.json ./models/
