@@ -172,6 +172,7 @@ patch_tags = ["fix", "perf"]
 [tool.semantic_release.remote]
 type = "github"
 token = { env = "GH_TOKEN" }
+ignore_token_for_push = true
 
 [tool.semantic_release.publish]
 upload_to_vcs_release = true
