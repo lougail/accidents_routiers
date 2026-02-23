@@ -59,37 +59,42 @@ docker compose down
 docker compose down -v
 ```
 
-### Images DockerHub
+### Images GHCR
 
 ```bash
-docker pull louisgaillard94/uc1-api:v1
-docker pull louisgaillard94/uc1-frontend:v1
+docker pull ghcr.io/lougail/accidents_routiers/api:latest
+docker pull ghcr.io/lougail/accidents_routiers/frontend:latest
 ```
 
 ## Structure du projet
 
 ```
 accidents_routiers/
+├── .github/workflows/          # CI/CD (ci, build, release, sync-develop)
 ├── api/                        # API FastAPI
 │   ├── Dockerfile
 │   ├── main.py
 │   ├── schemas.py
 │   ├── model.py
-│   ├── database.py             # Connexion PostgreSQL
-│   └── requirements.txt
+│   └── database.py             # Connexion PostgreSQL
 ├── frontend/                   # Interface Streamlit
 │   ├── Dockerfile
 │   ├── app.py
 │   ├── pages/
 │   │   ├── prediction.py
 │   │   └── dashboard.py
-│   └── requirements.txt
+│   └── utils/
+├── tests/                      # Tests pytest (API)
+│   ├── conftest.py
+│   └── test_api.py
 ├── models/                     # Modèles entraînés (.joblib)
 ├── notebooks/                  # Pipeline d'analyse
+├── docs/rendus/                # Livrables projet (6 fichiers markdown)
 ├── docker-compose.yml          # Orchestration des services
-├── .env.api.example            # Variables API
-├── .env.db.example             # Variables PostgreSQL
-├── .env.frontend.example       # Variables frontend
+├── pyproject.toml              # Config projet, dépendances, outils
+├── uv.lock                     # Lockfile uv
+├── .env.*.example              # Variables d'environnement (modèles)
+├── .pre-commit-config.yaml
 ├── .dockerignore
 └── README.md
 ```
