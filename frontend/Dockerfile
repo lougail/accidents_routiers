@@ -5,7 +5,7 @@ LABEL description="Docker image for the UC1 project"
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 RUN uv sync --group frontend --no-dev --no-editable
 
