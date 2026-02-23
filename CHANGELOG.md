@@ -1,6 +1,46 @@
 # CHANGELOG
 
 
+## v0.1.4 (2026-02-23)
+
+### Bug Fixes
+
+- **docker**: Add frontend-specific dockerignore for frontend build
+  ([#21](https://github.com/lougail/accidents_routiers/pull/21),
+  [`ce2f059`](https://github.com/lougail/accidents_routiers/commit/ce2f05953996f3e422c4854324cecc35f297a73f))
+
+The root .dockerignore excludes frontend/ and data/ for the API build, which breaks the frontend
+  Docker build that needs those directories.
+
+- **docker**: Remove untracked data file from frontend Dockerfile
+  ([#22](https://github.com/lougail/accidents_routiers/pull/22),
+  [`3879d1e`](https://github.com/lougail/accidents_routiers/commit/3879d1ea8348c9614371780a0824b553c968bdc8))
+
+data/UC1_v4_collision.csv is gitignored and not available in CI. The data file should be mounted at
+  runtime instead.
+
+### Continuous Integration
+
+- Add frontend Docker build, PostgreSQL service, and pip-audit
+  ([#19](https://github.com/lougail/accidents_routiers/pull/19),
+  [`e6dd425`](https://github.com/lougail/accidents_routiers/commit/e6dd4251d0b107c3f5662ebec8b7b8cf9af80b9f))
+
+* ci: add frontend Docker build, PostgreSQL service, and pip-audit
+
+- Add build-and-push-frontend job in build.yml with separate GHCR image - Rename API image to
+  ghcr.io/.../api for disambiguation - Add PostgreSQL service to tests job for integration test
+  readiness - Add pip-audit dependency scanning job in ci.yml - Add pip-audit to dev dependencies in
+  pyproject.toml
+
+* chore: clean up project structure
+
+- Move model figures from models/ to notebooks/05_modelisation/figures/ - Remove unused legacy files
+  (model_UC1_final.joblib, feature_names_UC1.json) - Add missing tool caches to .gitignore
+  (.mypy_cache, .ruff_cache, .pytest_cache, .coverage)
+
+* fix(deps): upgrade pillow 12.1.0 -> 12.1.1 (CVE-2026-25990)
+
+
 ## v0.1.3 (2026-02-23)
 
 ### Bug Fixes
