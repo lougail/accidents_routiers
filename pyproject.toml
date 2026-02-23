@@ -1,6 +1,6 @@
 [project]
 name = "accidents-routiers"
-version = "0.1.0"
+version = "0.1.2"
 description = "Prediction de la gravite des accidents routiers a partir des donnees BAAC"
 readme = "README.md"
 requires-python = ">=3.13"

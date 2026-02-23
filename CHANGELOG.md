@@ -1,6 +1,44 @@
 # CHANGELOG
 
 
+## v0.1.2 (2026-02-23)
+
+### Bug Fixes
+
+- **ci**: Forcer semantic-release a pousser via SSH
+  ([`b27418f`](https://github.com/lougail/accidents_routiers/commit/b27418f06e013dbd8d35e47f3d475b36ad8053d9))
+
+ignore_token_for_push = true empeche semantic-release d'utiliser le GH_TOKEN pour git push (HTTPS).
+  Le push utilise la deploy key SSH configuree dans le checkout, qui a le bypass sur le ruleset. Le
+  token reste utilise pour les appels API (creation de release).
+
+- **ci**: Utiliser deploy key pour semantic-release
+  ([`4991cf5`](https://github.com/lougail/accidents_routiers/commit/4991cf55a3496485e34e28c7737c90e462ad6074))
+
+GITHUB_TOKEN ne peut pas bypasser les rulesets de protection de branche. Utilise une deploy key SSH
+  a la place pour permettre a semantic-release de pousser le commit de version sur master.
+
+
+## v0.1.1 (2026-02-22)
+
+### Bug Fixes
+
+- **docs**: Corriger les instructions d'installation locale
+  ([`f2dd943`](https://github.com/lougail/accidents_routiers/commit/f2dd9430d6788cc8f56cad03fb94c91a220a9f9c))
+
+Remplacer pip/venv par uv qui est le gestionnaire de packages utilise par le projet.
+
+### Chores
+
+- Nettoyage du projet avant soumission
+  ([`0fa7eca`](https://github.com/lougail/accidents_routiers/commit/0fa7eca4996b87a6c9d6cda4de91df401c51cb2b))
+
+Supprime le fichier vide PHASE3_CI_PIPELINE.md, corrige la description placeholder dans
+  pyproject.toml, simplifie le README (retrait du diagramme ASCII et de la section variables d'env),
+  met a jour PLAN.md avec les statuts reels et sans emojis, et corrige le .gitignore pour tracker
+  PLAN.md/SYNTHESE_PROJET.md et ignorer .venv/.
+
+
 ## v0.1.0 (2026-02-22)
 
 ### Bug Fixes
