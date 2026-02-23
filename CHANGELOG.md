@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v0.1.5 (2026-02-23)
+
+### Bug Fixes
+
+- **docker**: Copy README.md required by hatchling during uv sync
+  ([#25](https://github.com/lougail/accidents_routiers/pull/25),
+  [`c34bf70`](https://github.com/lougail/accidents_routiers/commit/c34bf705a90e65a92789c3eeeec44cde86b3c58f))
+
+### Chores
+
+- Clean up repo structure, constants, and Docker config
+  ([#23](https://github.com/lougail/accidents_routiers/pull/23),
+  [`a76b960`](https://github.com/lougail/accidents_routiers/commit/a76b9608b8a5953dc7a271b9633a34da073d89db))
+
+- Fix tests/__init__.py filename - Extract DEFAULT_THRESHOLD constant in api/model.py, use it in
+  api/main.py - Move 6 rendus markdown files into docs/rendus/ - Update docker-compose.yml images to
+  GHCR - Remove redundant requirements.txt files, refactor Dockerfiles to use uv sync
+
+
 ## v0.1.4 (2026-02-23)
 
 ### Bug Fixes
