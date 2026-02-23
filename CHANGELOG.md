@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.1.3 (2026-02-23)
+
+### Bug Fixes
+
+- **ci**: Utiliser deploy key pour sync-develop
+  ([`51b6c76`](https://github.com/lougail/accidents_routiers/commit/51b6c760b6e4f2cb3489369d515c60ef927fd9b7))
+
+Meme probleme que release.yml : GITHUB_TOKEN ne peut pas pousser sur les branches protegees. Utilise
+  la deploy key SSH.
+
+
 ## v0.1.2 (2026-02-23)
 
 ### Bug Fixes
