@@ -1,6 +1,9 @@
 # CHANGELOG
 
 
+## v0.3.0 (2026-03-04)
+
+
 ## v0.2.0 (2026-03-04)
 
 ### Documentation
@@ -24,6 +27,13 @@ Replace obsolete DockerHub references with GHCR URLs, refresh project tree to re
   Create 2 Grafana dashboards (HTTP Overview + Predictions & Performance) - Add Locust stress
   testing (locustfile.py) tested at 20/100/200 users - Add docs: veille observabilite, dashboard
   design, rapport stress test - Add generate_predictions.py helper script
+
+- **monitoring**: Add PromQL exercises and 2 additional dashboards
+  ([`6bd0f0c`](https://github.com/lougail/accidents_routiers/commit/6bd0f0c60c3db549667184ce30e35710a6571181))
+
+- Add EXERCICES_PROMQL.md with 6 documented PromQL queries - Add Database Performance dashboard
+  (latency P50/P95/P99, inference by model) - Add RED Metrics dashboard (Rate/Errors/Duration per
+  endpoint)
 
 
 ## v0.1.5 (2026-02-23)
