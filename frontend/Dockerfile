@@ -7,6 +7,7 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock README.md ./
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+ENV PATH="/app/.venv/bin:$PATH"
 RUN uv sync --group frontend --no-dev --no-editable
 
 COPY frontend/ ./frontend/

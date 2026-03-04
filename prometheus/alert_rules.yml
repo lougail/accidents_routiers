@@ -1,0 +1,52 @@
+groups:
+  - name: api_alerts
+    rules:
+      # Alerte si le taux d'erreur 5xx depasse 5% pendant 2 minutes
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) * 100 > 5
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur HTTP eleve ({{ $value | printf \"%.1f\" }}%)"
+          description: "Plus de 5% des requetes sont en erreur 5xx depuis 2 minutes."
+
+      # Alerte si la latence P95 depasse 500ms pendant 2 minutes
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence P95 elevee ({{ $value | printf \"%.2f\" }}s)"
+          description: "La latence P95 depasse 500ms depuis 2 minutes."
+
+      # Alerte si aucun modele n'est charge
+      - alert: NoModelsLoaded
+        expr: models_loaded == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Aucun modele charge"
+          description: "L'API n'a aucun modele CatBoost en memoire depuis 1 minute."
+
+      # Alerte si le CPU depasse 85% pendant 5 minutes
+      - alert: HighCpuUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU eleve ({{ $value | printf \"%.1f\" }}%)"
+          description: "L'utilisation CPU depasse 85% depuis 5 minutes."
+
+      # Alerte si l'API ne repond plus (target down)
+      - alert: ApiDown
+        expr: up{job="api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API inaccessible"
+          description: "Prometheus ne peut plus scraper l'API depuis 1 minute."
