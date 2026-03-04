@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.3.1 (2026-03-04)
+
+### Bug Fixes
+
+- Remove fake Database Performance dashboard (no postgres_exporter)
+  ([`89e6de2`](https://github.com/lougail/accidents_routiers/commit/89e6de2fc9b791efff30b011d6eaf538b2e74e35))
+
+### Documentation
+
+- Update README with monitoring stack and stress test results
+  ([`4e3d69c`](https://github.com/lougail/accidents_routiers/commit/4e3d69c09ff1477bf9451e71d23497f7abcc1da2))
+
+
 ## v0.3.0 (2026-03-04)
 
 
