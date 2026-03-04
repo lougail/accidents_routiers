@@ -1,0 +1,471 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "Metriques metier du modele ML - predictions, gravite, performance par version",
+    "id": 2203836366745600,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Nombre total de predictions effectuees depuis le demarrage",
+        "fieldConfig": {
+          "defaults": {
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 0,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(predictions_total)",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Total predictions",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Nombre de predictions classees comme accident grave (proba >= seuil 0.45)",
+        "fieldConfig": {
+          "defaults": {
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 6,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(predictions_graves_total)",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Predictions graves",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Pourcentage de predictions classees graves sur le total",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 50
+                },
+                {
+                  "color": "red",
+                  "value": 75
+                }
+              ]
+            },
+            "unit": "percent"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 0
+        },
+        "options": {
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          },
+          "showThresholdMarkers": true
+        },
+        "targets": [
+          {
+            "expr": "sum(predictions_graves_total) / sum(predictions_total) * 100",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Taux de gravite",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Temps moyen pour effectuer une prediction (inference ML + sauvegarde DB)",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "noValue": "N/A",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.5
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "prediction_duration_seconds_sum / prediction_duration_seconds_count",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Duree moyenne prediction",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Taux de predictions par seconde, detaille par version de modele",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 15,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(predictions_total[5m])) by (version)",
+            "legendFormat": "{{version}}",
+            "refId": "A"
+          }
+        ],
+        "title": "Predictions par seconde (par version)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Temps de prediction par version de modele (moyenne glissante 5min)",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 10,
+              "lineWidth": 2,
+              "spanNulls": true,
+              "thresholdsStyle": {
+                "mode": "line"
+              }
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 0.5
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        },
+        "targets": [
+          {
+            "expr": "rate(prediction_duration_seconds_sum[5m]) / rate(prediction_duration_seconds_count[5m])",
+            "legendFormat": "Moyenne",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(prediction_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "P95",
+            "refId": "B"
+          }
+        ],
+        "title": "Duree prediction par version",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Repartition des predictions entre les 4 versions de modele",
+        "fieldConfig": {
+          "defaults": {}
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 12
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": [
+              "value",
+              "percent"
+            ]
+          },
+          "pieType": "donut",
+          "tooltip": {
+            "mode": "single"
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(predictions_total) by (version)",
+            "instant": true,
+            "legendFormat": "{{version}}",
+            "refId": "A"
+          }
+        ],
+        "title": "Predictions par version (total)",
+        "type": "piechart"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Nombre d erreurs metier par type (no_model, validation, server_error)",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 10,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "noValue": "0",
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 12
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(http_errors_total[5m])) by (type)",
+            "legendFormat": "{{type}}",
+            "refId": "A"
+          }
+        ],
+        "title": "Erreurs applicatives",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Utilisation memoire par container Docker",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 10,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "bytes"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 12
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{id=~\"/docker/.+\", id!~\".*buildkit.*\"}",
+            "legendFormat": "{{id}}",
+            "refId": "A"
+          }
+        ],
+        "title": "RAM par container",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+      "prometheus",
+      "fastapi",
+      "ml",
+      "predictions"
+    ],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timezone": "browser",
+    "title": "Predictions & Performance",
+    "uid": "da0b0d82-7fdf-4f86-b27f-9058b99c0dd4",
+    "version": 2
+  }
+}

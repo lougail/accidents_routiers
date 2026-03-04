@@ -7,6 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api.main
+from api import state
 
 
 @pytest.fixture
@@ -17,9 +18,9 @@ def client():
     On les vide ensuite pour tester le comportement sans modèles.
     """
     with TestClient(api.main.app, raise_server_exceptions=False) as c:
-        api.main.models.clear()
-        api.main.metadata.clear()
-        api.main.dep_mapping.clear()
+        state.models.clear()
+        state.metadata.clear()
+        state.dep_mapping.clear()
         yield c
 
 
@@ -37,13 +38,13 @@ def client_with_model():
         fake_model.predict_proba.return_value = np.array([[0.25, 0.75]])
 
         # Injecter le faux modèle
-        api.main.models.clear()
-        api.main.models["v1_base"] = fake_model
+        state.models.clear()
+        state.models["v1_base"] = fake_model
 
         # Métadonnées minimales (liste de features attendues par build_features)
-        api.main.metadata.clear()
-        api.main.metadata["threshold"] = 0.45
-        api.main.metadata["models"] = {
+        state.metadata.clear()
+        state.metadata["threshold"] = 0.45
+        state.metadata["models"] = {
             "v1_base": {
                 "features": [
                     "dep",
@@ -61,11 +62,11 @@ def client_with_model():
         }
 
         # Mapping département
-        api.main.dep_mapping.clear()
-        api.main.dep_mapping["75"] = 75
+        state.dep_mapping.clear()
+        state.dep_mapping["75"] = 75
 
         # Mock save_prediction pour ne pas toucher à la DB
-        with patch("api.main.save_prediction"):
+        with patch("api.routes.save_prediction"):
             yield c
 
 
