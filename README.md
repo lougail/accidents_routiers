@@ -42,6 +42,9 @@ L'application est disponible sur :
 - Frontend : http://localhost:8501
 - API : http://localhost:8000
 - Documentation API : http://localhost:8000/docs
+- Prometheus : http://localhost:9090
+- Grafana : http://localhost:3000 (admin/admin)
+- Alertmanager : http://localhost:9093
 
 ### Commandes utiles
 
@@ -74,6 +77,9 @@ accidents_routiers/
 ├── api/                        # API FastAPI
 │   ├── Dockerfile
 │   ├── main.py
+│   ├── routes.py               # Endpoints (health, predict, feature-importances)
+│   ├── state.py                # État global (modèles, metadata)
+│   ├── metrics.py              # Métriques Prometheus custom
 │   ├── schemas.py
 │   ├── model.py
 │   └── database.py             # Connexion PostgreSQL
@@ -81,25 +87,29 @@ accidents_routiers/
 │   ├── Dockerfile
 │   ├── app.py
 │   ├── pages/
-│   │   ├── prediction.py
-│   │   └── dashboard.py
 │   └── utils/
 ├── tests/                      # Tests pytest (API)
-│   ├── conftest.py
-│   └── test_api.py
 ├── models/                     # Modèles entraînés (.joblib)
-├── notebooks/                  # Pipeline d'analyse
-├── docs/rendus/                # Livrables projet (6 fichiers markdown)
-├── docker-compose.yml          # Orchestration des services
+├── notebooks/                  # Pipeline d'analyse (01 à 05)
+├── prometheus/                 # Configuration monitoring
+│   ├── prometheus.yml          # Scrape config (API, node-exporter, cAdvisor)
+│   ├── alert_rules.yml         # 5 règles d'alerte
+│   └── alertmanager.yml        # Config Alertmanager
+├── grafana/dashboards/         # 4 dashboards JSON exportés
+├── docs/                       # Documentation
+│   ├── rendus/                 # Livrables projet
+│   ├── VEILLE_OBSERVABILITE.md # Concepts monitoring & observabilité
+│   ├── DASHBOARD_DESIGN.md     # Design des dashboards Grafana
+│   ├── RAPPORT_STRESS_TEST.md  # Résultats stress tests (20/100/200 users)
+│   └── EXERCICES_PROMQL.md     # 6 requêtes PromQL commentées
+├── scripts/                    # Scripts utilitaires
+├── locustfile.py               # Stress testing Locust
+├── docker-compose.yml          # 8 services Docker
 ├── pyproject.toml              # Config projet, dépendances, outils
-├── uv.lock                     # Lockfile uv
-├── .env.*.example              # Variables d'environnement (modèles)
-├── .pre-commit-config.yaml
-├── .dockerignore
-└── README.md
+└── uv.lock
 ```
 
-L'architecture est composée de 3 services Docker (Frontend Streamlit, API FastAPI, PostgreSQL) reliés par un réseau interne. Les données PostgreSQL sont persistées via un volume Docker.
+L'architecture est composée de 8 services Docker (API FastAPI, Frontend Streamlit, PostgreSQL, Prometheus, Grafana, Alertmanager, Node Exporter, cAdvisor) reliés par un réseau interne.
 
 Les variables d'environnement sont configurées via les fichiers `.env.*`. Des fichiers `.env.*.example` sont fournis comme modèles.
 
@@ -168,6 +178,24 @@ Les fichiers CSV BAAC ne sont pas inclus dans le repo (782 Mo). Pour les obtenir
 
 Retourne le top 15 des features les plus importantes par modèle.
 
+## Monitoring & Observabilité
+
+Stack de monitoring complète basée sur Prometheus + Grafana :
+
+- **Instrumentation** : `prometheus-client` + `prometheus-fastapi-instrumentator` exposent les métriques sur `/metrics`
+- **Métriques custom** : `predictions_total`, `predictions_graves_total`, `prediction_duration_seconds`, `models_loaded`
+- **4 dashboards Grafana** : HTTP Overview, Predictions & Performance, Database Performance, RED Metrics par Endpoint
+- **5 alertes Prometheus** : taux d'erreur, latence P95, CPU, modèles chargés, API down
+- **Stress tests Locust** : 20/100/200 utilisateurs simultanés, 0% erreurs, 158 req/s max
+
+### Stress test (résumé)
+
+| Users | RPS | Failures | P95 |
+|-------|-----|----------|-----|
+| 20 | 15.8 | 0% | 30ms |
+| 100 | 79.8 | 0% | 27ms |
+| 200 | 158.5 | 0% | 24ms |
+
 ## Choix techniques
 
 - **CatBoost** : gestion native des variables catégorielles, robuste au surapprentissage
@@ -175,3 +203,4 @@ Retourne le top 15 des features les plus importantes par modèle.
 - **Seuil 0.45** : optimisé pour recall > 80%
 - **4 modèles progressifs** : adaptés au niveau d'information disponible
 - **PostgreSQL** : persistance des prédictions pour analyse ultérieure
+- **Prometheus + Grafana** : monitoring temps réel avec alerting
