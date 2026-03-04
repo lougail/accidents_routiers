@@ -1,0 +1,483 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "Metriques de performance de la base de donnees PostgreSQL et des operations de sauvegarde",
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Temps median pour sauvegarder une prediction en base de donnees",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 3,
+            "noValue": "N/A",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.1
+                },
+                {
+                  "color": "red",
+                  "value": 0.3
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 0,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Duree sauvegarde prediction (P50)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "95e percentile du temps de sauvegarde",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 3,
+            "noValue": "N/A",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.2
+                },
+                {
+                  "color": "red",
+                  "value": 0.5
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 6,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Duree sauvegarde prediction (P95)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "99e percentile — pires cas de sauvegarde",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 3,
+            "noValue": "N/A",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.3
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Duree sauvegarde prediction (P99)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Debit de l'endpoint principal qui ecrit en base",
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{handler=\"/predict\"}[5m]))",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Requetes /predict par seconde",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Evolution des percentiles de latence de l'endpoint /predict qui inclut l'ecriture en BDD",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 10,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "legendFormat": "P50",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "legendFormat": "P95",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{handler=\"/predict\"}[5m])) by (le))",
+            "legendFormat": "P99",
+            "refId": "C"
+          }
+        ],
+        "title": "Latences /predict dans le temps (P50 / P95 / P99)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Temps d'inference moyen par version de modele CatBoost",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 10,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "s"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        },
+        "targets": [
+          {
+            "expr": "rate(prediction_duration_seconds_sum[5m]) / rate(prediction_duration_seconds_count[5m])",
+            "legendFormat": "{{version}}",
+            "refId": "A"
+          }
+        ],
+        "title": "Duree inference par version de modele",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Nombre total de predictions sauvegardees en base depuis le demarrage",
+        "fieldConfig": {
+          "defaults": {
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                }
+              ]
+            }
+          }
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 8,
+          "x": 0,
+          "y": 12
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(predictions_total)",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Volume total de sauvegardes (cumule)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Compteur d'erreurs applicatives par categorie (no_model, validation)",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 20,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "reqps"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 12
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(http_errors_total[5m])) by (type)",
+            "legendFormat": "{{type}}",
+            "refId": "A"
+          }
+        ],
+        "title": "Erreurs par type",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfew89del74lca"
+        },
+        "description": "Memoire utilisee par le container PostgreSQL",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "fillOpacity": 15,
+              "lineWidth": 2,
+              "spanNulls": true
+            },
+            "unit": "bytes"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 12
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        },
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{name=~\".*db.*|.*postgres.*\"}",
+            "legendFormat": "PostgreSQL",
+            "refId": "A"
+          }
+        ],
+        "title": "RAM PostgreSQL",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+      "prometheus",
+      "database",
+      "monitoring"
+    ],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timezone": "browser",
+    "title": "Database Performance"
+  },
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus"
+    }
+  ]
+}
