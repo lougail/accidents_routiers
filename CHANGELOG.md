@@ -1,6 +1,31 @@
 # CHANGELOG
 
 
+## v0.2.0 (2026-03-04)
+
+### Documentation
+
+- Update README with GHCR images and current structure, add CLAUDE.md
+  ([#26](https://github.com/lougail/accidents_routiers/pull/26),
+  [`203fe27`](https://github.com/lougail/accidents_routiers/commit/203fe27f890a05c44f1c1c4891815500ac2a6236))
+
+Replace obsolete DockerHub references with GHCR URLs, refresh project tree to reflect post-cleanup
+  state (no more requirements.txt, added tests/, docs/rendus/, pyproject.toml, workflows). Create
+  project-level CLAUDE.md with stack, commands, conventions, CI/CD and ML model details.
+
+### Features
+
+- **monitoring**: Add Prometheus, Grafana, alerting and stress testing
+  ([`72c69f6`](https://github.com/lougail/accidents_routiers/commit/72c69f6474e86ff2c3b1c70fbfeac33fb83b4b24))
+
+- Refactor API: extract routes.py, state.py, metrics.py from main.py - Instrument API with
+  prometheus-client and fastapi-instrumentator - Add Prometheus, Node Exporter, cAdvisor, Grafana to
+  Docker Compose - Add Alertmanager with 5 alert rules (error rate, latency, CPU, models, uptime) -
+  Create 2 Grafana dashboards (HTTP Overview + Predictions & Performance) - Add Locust stress
+  testing (locustfile.py) tested at 20/100/200 users - Add docs: veille observabilite, dashboard
+  design, rapport stress test - Add generate_predictions.py helper script
+
+
 ## v0.1.5 (2026-02-23)
 
 ### Bug Fixes
